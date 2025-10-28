@@ -1,0 +1,93 @@
+# =========================================
+# Python
+# =========================================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+build/
+dist/
+*.spec
+
+# =========================================
+# Notebooks
+# =========================================
+.ipynb_checkpoints/
+*.nbconvert.ipynb
+*.checkpoint.ipynb
+
+# =========================================
+# Dados
+# =========================================
+# Arquivos grandes ou sensíveis (dados brutos)
+data/raw/
+data/*.zip
+data/*.tar
+data/*.tar.gz
+data/*.7z
+data/*.rar
+
+# Permitir datasets tratados e pequenos
+!data/ndt_tests_corrigido.csv
+
+# =========================================
+# Relatórios LaTeX
+# =========================================
+*.aux
+*.bbl
+*.blg
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.dvi
+*.nav
+*.snm
+
+# =========================================
+# Ambientes Virtuais
+# =========================================
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================================
+# IDEs e Sistema
+# =========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# =========================================
+# Arquivos temporários ou intermediários
+# =========================================
+*.csv~
+*.txt~
+*.dat~
+*.old
+*.log
+
+# =========================================
+# Pytest / Cache
+# =========================================
+.pytest_cache/
+.cache/
+coverage.xml
+htmlcov/
