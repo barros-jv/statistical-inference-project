@@ -1,12 +1,12 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage{geometry}
- \geometry{
- a4paper,
- total={170mm,257mm},
- left=20mm,
- top=20mm,
- }
+\geometry{
+a4paper,
+total={170mm,257mm},
+left=20mm,
+top=20mm,
+}
 \usepackage{graphicx}
 \usepackage{titling}
 \usepackage{fancyhdr}
@@ -19,26 +19,32 @@
 \usepackage{booktabs}
 \usepackage{float}
 \usepackage{subcaption}
+\usepackage{lastpage}
 
 % ======= Título e autor =======
-\title{Relatório de Análise Estatística e Inferência Bayesiana}
+\title{\vspace{-25pt}Relatório de Análise Estatística e Inferência Bayesiana}
 \author{João Victor Barros}
 \date{Outubro 2025}
 
-% ======= Cabeçalho e rodapé =======
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Relatório de Análise Estatística e Inferência Bayesiana}
+\fancyhead[R]{\theauthor}
+\fancyfoot[L]{\thedate}
+\fancyfoot[R]{\includegraphics[width=2cm]{logo_coppe.png}}
+\fancyfoot[C]{Página \thepage\ de \pageref{LastPage}}
+
 \fancypagestyle{plain}{
-    \fancyhf{}
-    \fancyfoot[R]{\includegraphics[width=2cm]{logo_coppe.png}}
-    \fancyfoot[L]{\thedate}
-    \fancyhead[L]{Relatório de Estatística e Inferência}
-    \fancyhead[R]{\theauthor}
+	\fancyhf{}
+	\fancyfoot[R]{\includegraphics[width=2cm]{logo_coppe.png}}
+	\fancyfoot[L]{\thedate}
 }
 
 \makeatletter
 \def\@maketitle{%
   \newpage
   \null
-  \vskip 1em%
+  \vskip 0.5em%
   \begin{center}%
   \let \footnote \thanks
     {\LARGE \@title \par}%
@@ -174,7 +180,7 @@ descritas na Tabela~\ref{tab:variables}. As medições incluem taxas de
 Antes das etapas de análise e modelagem, foi realizada uma inspeção de consistência
 e qualidade dos dados com o objetivo de verificar a completude, a coerência dos tipos
 de variáveis e a presença de possíveis duplicatas. O dataset apresentou
-\textbf{nenhum valor nulo} e \textbf{nenhuma linha duplicada}, indicando excelente
+\textbf{nenhum valor nulo} e \textbf{nenhuma linha duplicada}, indicando boa
 integridade estrutural. A Tabela~\ref{tab:data_quality} resume as principais estatísticas
 levantadas durante o pré-processamento.
 
@@ -717,7 +723,7 @@ As Figuras~\ref{fig:chart_download_throughput_bps_client13} e \ref{fig:chart_rtt
 Ambas as variáveis demonstram comportamento semelhante, com uma forte concentração de dados à direita e uma pequena cauda à esquerda, refletindo poucos valores anormalmente baixos de taxa de transferência.  
 Nos boxplots, essa característica se traduz em \textit{outliers} localizados à esquerda, representando medições de throughput pontualmente reduzidas, possivelmente causadas por momentos de congestionamento de rede ou instabilidade temporária.
 
-\begin{figure}
+\begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_download_throughput_bps_client13.png}
 	\caption{Taxa média de download (bits/s) para o Cliente 13.}
 	\label{fig:chart_download_throughput_bps_client13}
@@ -732,13 +738,13 @@ Nos boxplots, essa característica se traduz em \textit{outliers} localizados à
 Ao analisar o tempo médio de ida e volta (RTT) para download e upload, ilustrados nas Figuras~\ref{fig:chart_rtt_download_sec_client13} e \ref{fig:chart_rtt_upload_sec_client13}, observa-se um comportamento oposto: há uma concentração de dados à esquerda com uma cauda à direita, indicando que, em geral, o cliente mantém baixa latência, mas com eventos ocasionais de aumento significativo.  
 Esses picos de RTT, visíveis como outliers no boxplot, podem estar associados a momentos de sobrecarga momentânea na rede local ou em trechos intermediários da rota de comunicação.
 
-\begin{figure}[htp]
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_rtt_download_sec_client13.png}
 	\caption{Tempo médio de ida e volta no download (RTT) (s) para o Cliente 13.}
 	\label{fig:chart_upload_throughput_bps_client13}
 \end{figure}
 
-\begin{figure}[htp]
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_rtt_upload_sec_client13.png}
 	\caption{Tempo médio de ida e volta no upload (RTT) (s) para o Cliente 13.}
 	\label{fig:chart_rtt_upload_sec_client13}
@@ -753,11 +759,12 @@ O boxplot mostra poucos outliers à esquerda, indicando uma variação controlad
 	\label{fig:chart_packet_loss_percent_client13}
 \end{figure}
 
-TEXTO AQUI!
+A Figura \ref{fig:scatter_client13} explora a relação entre o RTT de Upload e a Porcentagem de Perda de Pacotes (\texttt{packet\_loss\_percent}), segmentada por servidor, reforçando achados anteriores de \texttt{EDA}. A grande maioria das medições exibe um \text{RTT} de Upload consistentemente baixo (abaixo de $0.025$ segundos), com a perda de pacotes crônica e persistente concentrada entre $2.5\%$ e $8.0\%$. Não se observa correlação linear forte entre as variáveis, sugerindo que o \text{RTT} alto de certos \textit{outliers} (próximo a $0.09$s) é causado por eventos de latência intermitentes, e não pelo mecanismo que gera a perda. A dispersão mista dos servidores na região de alta densidade indica que tanto o \text{RTT} base quanto a perda crônica são características estáveis e independentes do servidor específico.
 
 \begin{figure}[htp]
-	\includegraphics[width=\textwidth]{../figures/eda/scatter_client13.png}
-	\caption{MUDAR}
+	\centering
+	\includegraphics[width=0.8\textwidth]{../figures/eda/scatter_client13.png}
+	\caption{Relação entre a Porcentagem de Perda de Pacotes e o Tempo de Ida e Volta (RTT) de Upload por Servidor.}
 	\label{fig:scatter_client13}
 \end{figure}
 
@@ -767,36 +774,36 @@ Para o Servidor 02, as Figuras~\ref{fig:chart_download_throughput_bps_server02} 
 Ambas exibem comportamento aproximadamente uniforme, com leve concentração nos extremos, mais evidente no cenário de download.  
 Devido à ampla dispersão dos dados, os boxplots resultam visualmente equilibrados e sem indícios significativos de outliers, sugerindo medições consistentes em uma faixa operacional ampla, característica esperada para um servidor de alta capacidade.
 
-\begin{figure}[htp]
+Os tempos médios de ida e volta (\textit{RTT}) de download e upload, mostrados nas Figuras~\ref{fig:chart_rtt_download_sec_server02} e \ref{fig:chart_rtt_upload_sec_server02}, apresentam comportamentos distintos.  
+O RTT de download tende a seguir uma distribuição aproximadamente normal, com uma pequena cauda à direita, o que explica a presença de outliers isolados no boxplot.  
+Já o RTT de upload é altamente concentrado à direita, com baixa variabilidade central, uma característica típica de redes otimizadas, mas que também pode gerar a detecção de outliers devido à densidade local elevada.
+
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_download_throughput_bps_server02.png}
 	\caption{Taxa média de download (bits/s) para o Servidor 2.}
 	\label{fig:chart_download_throughput_bps_server02}
 \end{figure}
 
-\begin{figure}[htp]
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_upload_throughput_bps_server02.png}
 	\caption{Taxa média de upload (bits/s) para o Servidor 2.}
 	\label{fig:chart_upload_throughput_bps_server02}
 \end{figure}
 
-Os tempos médios de ida e volta (\textit{RTT}) de download e upload, mostrados nas Figuras~\ref{fig:chart_rtt_download_sec_server02} e \ref{fig:chart_rtt_upload_sec_server02}, apresentam comportamentos distintos.  
-O RTT de download tende a seguir uma distribuição aproximadamente normal, com uma pequena cauda à direita, o que explica a presença de outliers isolados no boxplot.  
-Já o RTT de upload é altamente concentrado à direita, com baixa variabilidade central, uma característica típica de redes otimizadas, mas que também pode gerar a detecção de outliers devido à densidade local elevada.
-
-\begin{figure}[htp]
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_rtt_download_sec_server02.png}
 	\caption{Tempo médio de ida e volta no download (RTT) (s) para o Servidor 2.}
 	\label{fig:chart_rtt_download_sec_server02}
 \end{figure}
 
-\begin{figure}[htp]
+Por fim, a fração de perda de pacotes (Figura \ref{fig:chart_packet_loss_percent_server02}) mostra forte concentração à esquerda e uma cauda à direita mais extensa.  
+Embora o boxplot indique vários outliers, isso decorre principalmente da alta densidade de valores próximos a zero, o que aumenta a sensibilidade dos limites interquartis.
+
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_rtt_upload_sec_server02.png}
 	\caption{Tempo médio de ida e volta no upload (RTT) (s) para o Servidor 2.}
 	\label{fig:chart_rtt_upload_sec_server02}
 \end{figure}
-
-Por fim, a fração de perda de pacotes (Figura \ref{fig:chart_packet_loss_percent_server02}) mostra forte concentração à esquerda e uma cauda à direita mais extensa.  
-Embora o boxplot indique vários outliers, isso decorre principalmente da alta densidade de valores próximos a zero, o que aumenta a sensibilidade dos limites interquartis.
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/eda/chart_packet_loss_percent_server02.png}
@@ -804,11 +811,12 @@ Embora o boxplot indique vários outliers, isso decorre principalmente da alta d
 	\label{fig:chart_packet_loss_percent_server02}
 \end{figure}
 
-TEXTO AQUI!
+A Figura \ref{fig:scatter_server02} apresenta a relação entre o RTT de Upload e a perda de pacotes especificamente para o Servidor 2. A grande maioria das observações está concentrada próxima a zero no eixo \textit{Y}, mantendo o padrão de baixo \text{RTT} encontrado na análise geral. No entanto, o gráfico exibe \textit{outliers} severos no eixo \textit{Y}, com valores negativos de \text{RTT} em torno de $-1.0$ segundos, o que é fisicamente impossível para um tempo de latência. Tais pontos indicam falhas no processo de medição ou na coleta de dados, devendo ser tratados como anomalias ou erros de \text{data cleaning} antes de qualquer inferência. Excluindo essas anomalias, o \texttt{server02} demonstra uma perda de pacotes que varia de $0\%$ a aproximadamente $20\%$, com \text{RTT} consistentemente baixo.
 
 \begin{figure}[htp]
-	\includegraphics[width=\textwidth]{../figures/eda/scatter_server02.png}
-	\caption{MUDAR}
+	\centering
+	\includegraphics[width=0.8\textwidth]{../figures/eda/scatter_server02.png}
+	\caption{Relação entre a Porcentagem de Perda de Pacotes e o Tempo de Ida e Volta (RTT) de Upload para o Servidor 2.}
 	\label{fig:scatter_server02}
 \end{figure}
 
@@ -965,31 +973,31 @@ enquanto o painel à direita mostra o respectivo gráfico \textit{QQ-plot}.
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/rtt_download_sec_ajuste_normal_client13.png}
-	\caption{Ajuste da distribuição Normal aos dados de RTT de download para o Cliente 13. À esquerda, histograma dos dados reais com a densidade teórica ajustada; à direita, gráfico QQ-plot comparando os quantis empíricos e teóricos.}
+	\caption{Ajuste da distribuição Normal aos dados de RTT de download para o Cliente 13.}
 	\label{fig:rtt_download_sec_ajuste_normal_client13}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/rtt_upload_sec_ajuste_normal_client13.png}
-	\caption{Ajuste da distribuição Normal aos dados de RTT de upload para o Cliente 13. O QQ-plot confirma a boa aderência do modelo à distribuição observada.}
+	\caption{Ajuste da distribuição Normal aos dados de RTT de upload para o Cliente 13.}
 	\label{fig:rtt_upload_sec_ajuste_normal_client13}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/download_throughput_bps_ajuste_gamma_client13.png}
-	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de download para o Cliente 13. O modelo representa bem a concentração principal dos dados, com pequenas discrepâncias nas caudas.}
+	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de download para o Cliente 13.}
 	\label{fig:download_throughput_bps_ajuste_gamma_client13}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/upload_throughput_bps_ajuste_gamma_client13.png}
-	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de upload para o Cliente 13. Observa-se boa correspondência entre o modelo e a densidade empírica.}
+	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de upload para o Cliente 13.}
 	\label{fig:upload_throughput_bps_ajuste_gamma_client13}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/packet_loss_ajuste_beta_client13.png}
-	\caption{Ajuste da distribuição Beta à fração de perda de pacotes para o Cliente 13. O modelo descreve adequadamente a concentração de valores baixos observada nos dados.}
+	\caption{Ajuste da distribuição Beta à fração de perda de pacotes para o Cliente 13.}
 	\label{fig:packet_loss_ajuste_beta_client13}
 \end{figure}
 
@@ -1061,7 +1069,7 @@ do modelo ajustado para o Cliente 13.
 
 \begin{table}[htp]
 	\centering
-	\caption{Parâmetros estimados por Máxima Verossimilhança (MLE) para o Cliente 13. Os valores correspondem aos estimadores que maximizam a função de verossimilhança de cada modelo ajustado.}
+	\caption{Parâmetros estimados por Máxima Verossimilhança (MLE) para o Cliente 13.}
 	\label{tab:mle_parameters_client13}
 	\begin{tabular}{|l|c|l|}
 		\hline
@@ -1080,7 +1088,7 @@ do modelo ajustado para o Cliente 13.
 	\end{tabular}
 \end{table}
 
-\subsubsection*{Resultados para o Servidor 02}
+\subsubsection{Resultados para o Servidor 02}
 
 De forma análoga ao caso anterior, as Figuras~\ref{fig:rtt_download_sec_ajuste_normal_server02}
 a \ref{fig:packet_loss_ajuste_beta_serve02} apresentam os resultados obtidos
@@ -1088,33 +1096,33 @@ para o Servidor 02. Observa-se novamente que os modelos normais e beta obtiveram
 bom desempenho, especialmente para as variáveis de RTT e perda de pacotes,
 cuja distribuição empírica é bem descrita pelos modelos propostos.
 
-\begin{figure}[htp]
+\begin{figure}[H]
 	\includegraphics[width=\textwidth]{../figures/mle/rtt_download_sec_ajuste_normal_server02.png}
-	\caption{Ajuste da distribuição Normal aos dados de RTT de download para o Servidor 02. O modelo se ajusta bem à forma aproximadamente simétrica da distribuição empírica.}
+	\caption{Ajuste da distribuição Normal aos dados de RTT de download para o Servidor 02.}
 	\label{fig:rtt_download_sec_ajuste_normal_server02}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/rtt_upload_sec_ajuste_normal_server02.png}
-	\caption{Ajuste da distribuição Normal aos dados de RTT de upload para o Servidor 02. O QQ-plot confirma a boa aderência do modelo.}
+	\caption{Ajuste da distribuição Normal aos dados de RTT de upload para o Servidor 02.}
 	\label{fig:rtt_upload_sec_ajuste_normal_server02}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/download_throughput_bps_ajuste_gamma_server02.png}
-	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de download para o Servidor 02. O modelo descreve parcialmente a densidade principal, com menor precisão nas extremidades.}
+	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de download para o Servidor 02.}
 	\label{fig:download_throughput_bps_ajuste_gamma_server02}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/upload_throughput_bps_ajuste_gamma_server02.png}
-	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de upload para o Servidor 02. Observa-se boa aproximação no centro da distribuição, mas caudas mais dispersas.}
+	\caption{Ajuste da distribuição Gama aos dados de \textit{throughput} de upload para o Servidor 02.}
 	\label{fig:upload_throughput_bps_ajuste_gamma_server02}
 \end{figure}
 
 \begin{figure}[htp]
 	\includegraphics[width=\textwidth]{../figures/mle/packet_loss_ajuste_beta_serve02.png}
-	\caption{Ajuste da distribuição Beta à variável de perda de pacotes para o Servidor 02. O modelo captura adequadamente a concentração de valores baixos e a assimetria à direita.}
+	\caption{Ajuste da distribuição Beta à variável de perda de pacotes para o Servidor 02.}
 	\label{fig:packet_loss_ajuste_beta_serve02}
 \end{figure}
 
@@ -1152,6 +1160,31 @@ indicando convergência estável do processo de estimação e ausência de múlt
 	\label{fig:rtt_loglik_normal_combined_server02}
 \end{figure}
 
+Os valores finais estimados para o Servidor 02 estão resumidos na
+Tabela~\ref{tab:mle_parameters_server02},
+correspondendo aos parâmetros que maximizam a verossimilhança para cada modelo ajustado.
+
+\begin{table}[H]
+	\centering
+	\caption{Parâmetros estimados por Máxima Verossimilhança (MLE) para o Servidor 02.}
+	\label{tab:mle_parameters_server02}
+	\begin{tabular}{|l|c|l|}
+		\hline
+		\textbf{Variável} & \textbf{Distribuição} & \textbf{Parâmetros MLE} \\
+		\hline
+		rtt\_download\_sec & Normal & $\hat{\mu}=0.01138$, $\hat{\sigma}=0.002638$ \\
+		\hline
+		rtt\_upload\_sec & Normal & $\hat{\mu}=0.0113$, $\hat{\sigma}=0.04239$ \\
+		\hline
+		download\_throughput\_bps & Gamma & $\hat{k}=2.57$, $\hat{\theta}=2.479 \times 10^8$ \\
+		\hline
+		upload\_throughput\_bps & Gamma & $\hat{k}=1.148$, $\hat{\theta}=3.846 \times 10^8$ \\
+		\hline
+		packet\_loss\_percent & Beta & $\hat{\alpha}=0.4523$, $\hat{\beta}=22.38$ \\
+		\hline
+	\end{tabular}
+\end{table}
+
 \begin{figure}[htp]
 	\centering
 	\begin{subfigure}[b]{0.48\textwidth} % Ocupa 48% da largura do texto
@@ -1175,31 +1208,6 @@ indicando convergência estável do processo de estimação e ausência de múlt
 	\caption{Superfície de log-verossimilhança para os parâmetros $\alpha$ e $\beta$ da distribuição Beta ajustada à variável de perda de pacotes do Servidor 02.}
 	\label{fig:packet_loss_loglik_surface_beta_server02}
 \end{figure}
-
-Os valores finais estimados para o Servidor 02 estão resumidos na
-Tabela~\ref{tab:mle_parameters_server02},
-correspondendo aos parâmetros que maximizam a verossimilhança para cada modelo ajustado.
-
-\begin{table}[htp]
-	\centering
-	\caption{Parâmetros estimados por Máxima Verossimilhança (MLE) para o Servidor 02. Os valores representam os pares de parâmetros que maximizam a log-verossimilhança de cada modelo ajustado.}
-	\label{tab:mle_parameters_server02}
-	\begin{tabular}{|l|c|l|}
-		\hline
-		\textbf{Variável} & \textbf{Distribuição} & \textbf{Parâmetros MLE} \\
-		\hline
-		rtt\_download\_sec & Normal & $\hat{\mu}=0.01138$, $\hat{\sigma}=0.002638$ \\
-		\hline
-		rtt\_upload\_sec & Normal & $\hat{\mu}=0.0113$, $\hat{\sigma}=0.04239$ \\
-		\hline
-		download\_throughput\_bps & Gamma & $\hat{k}=2.57$, $\hat{\theta}=2.479 \times 10^8$ \\
-		\hline
-		upload\_throughput\_bps & Gamma & $\hat{k}=1.148$, $\hat{\theta}=3.846 \times 10^8$ \\
-		\hline
-		packet\_loss\_percent & Beta & $\hat{\alpha}=0.4523$, $\hat{\beta}=22.38$ \\
-		\hline
-	\end{tabular}
-\end{table}
 
 De modo geral, os resultados obtidos por MLE confirmam a adequação dos modelos propostos
 e indicam que as distribuições Normal, Gama e Beta foram capazes de capturar satisfatoriamente
@@ -1235,7 +1243,7 @@ mantendo a mesma escolha empregada na etapa de MLE:
 	limitadas ao intervalo $[0, 1]$.
 \end{itemize}
 
-As distribuições \textit{a priori} foram escolhidas de forma \textbf{fracamente informativa},
+As distribuições \textit{a priori} foram escolhidas de forma fracamente informativa,
 permitindo que os dados observados tivessem maior influência no processo de atualização.
 Essa decisão foi importante devido à natureza empírica dos dados, cuja variabilidade é ampla
 e de difícil parametrização prévia.
@@ -1254,7 +1262,7 @@ onde os parâmetros atualizados são dados por:
 	\mu_n = \sigma_n^2 \left( \frac{\mu_0}{\sigma_0^2} + \frac{n \bar{x}}{\sigma^2} \right).
 \end{equation}
 
-A distribuição \textbf{preditiva posterior} é obtida pela integração dos parâmetros e segue
+A distribuição preditiva posterior é obtida pela integração dos parâmetros e segue
 uma Normal:
 \begin{equation}
 	p(x_{new}|x) = \mathcal{N}(\mu_n, \sigma^2 + \sigma_n^2),
@@ -1271,28 +1279,27 @@ mantendo a conjugação e simplificando o cálculo das distribuições preditiva
 
 \subsubsection{Resultados para o Cliente 13}
 
-As Figuras~\ref{fig:rtt_download_sec_bayesian_normalnormal_client13}
-e~\ref{fig:rtt_upload_sec_bayesian_normalnormal_client13} apresentam as distribuições
-a priori, a posteriori e preditiva para o \textit{RTT} de \textit{download} e \textit{upload}.
-Em ambos os casos, observa-se que a atualização bayesiana convergiu fortemente em torno da média
-observada, refletindo alta consistência entre as informações prévias e os dados empíricos.
-As curvas preditivas (em preto) se sobrepõem de forma satisfatória à distribuição dos dados de teste,
-indicando excelente desempenho do modelo.
+As Figuras~\ref{fig:rtt_download_sec_bayesian_normalnormal_client13} e~\ref{fig:rtt_upload_sec_bayesian_normalnormal_client13} apresentam as distribuições a priori, a posteriori e preditiva para o \textit{RTT} de \textit{download} e \textit{upload} do Cliente 13.
+Em ambos os casos, observa-se uma forte convergência da distribuição posterior em torno da média empírica, evidenciando a coerência entre as informações prévias e os dados observados.
+As curvas preditivas (em preto) se sobrepõem de forma consistente à distribuição dos dados de teste, indicando um bom ajuste do modelo Normal–Normal.
 
-\begin{figure}[htp]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/rtt_download_sec_bayesian_normalnormal_client13.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para o RTT de \textit{download} (Cliente 13) sob o modelo Normal–Normal.}
 	\label{fig:rtt_download_sec_bayesian_normalnormal_client13}
 \end{figure}
-\begin{figure}[htp]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/rtt_upload_sec_bayesian_normalnormal_client13.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para o RTT de \textit{upload} (Cliente 13) utilizando o modelo Normal–Normal.}
 	\label{fig:rtt_upload_sec_bayesian_normalnormal_client13}
 \end{figure}
 
-\begin{table}[htp]
+\newpage
+As Tabelas~\ref{tab:bayes_rtt_download_client13} e~\ref{tab:bayes_rtt_upload_client13} confirmam quantitativamente essa estabilidade, mostrando convergência precisa entre os parâmetros estimados via MLE e as médias posteriores obtidas.
+
+\begin{table}[htp!]
 	\centering
 	\caption{Comparação entre prior e posterior para o Cliente 13 — RTT Download.}
 	\label{tab:bayes_rtt_download_client13}
@@ -1305,7 +1312,7 @@ indicando excelente desempenho do modelo.
 	\end{tabular}
 \end{table}
 
-\begin{table}[htp]
+\begin{table}[htp!]
 	\centering
 	\caption{Comparação entre prior e posterior para o Cliente 13 — RTT Upload.}
 	\label{tab:bayes_rtt_upload_client13}
@@ -1318,14 +1325,24 @@ indicando excelente desempenho do modelo.
 	\end{tabular}
 \end{table}
 
-O mesmo comportamento foi verificado para as variáveis de \textit{Throughput}
-(Download e Upload), cujos resultados estão ilustrados nas
-Figuras~\ref{fig:download_throughput_bps_bayesian_gammagamma_client13}
-e~\ref{fig:upload_throughput_bps_bayesian_gammagamma_client13}.
-Ambas apresentaram convergência rápida e previsões com médias próximas às obtidas via MLE,
-como mostrado nas tabelas a seguir:
+Comportamento semelhante foi observado para as variáveis de \textit{Throughput} (Download e Upload), cujos resultados estão ilustrados nas Figuras~\ref{fig:download_throughput_bps_bayesian_gammagamma_client13} e~\ref{fig:upload_throughput_bps_bayesian_gammagamma_client13}.
+Nesses casos, os modelos Gamma–Gamma apresentaram rápida convergência e previsões com médias praticamente idênticas às obtidas por MLE, evidenciando a robustez e a estabilidade da inferência.
+As Tabelas~\ref{tab:bayes_gamma_download_client13} e~\ref{tab:bayes_gamma_upload_client13} destacam essa consistência, demonstrando que as médias preditivas e as estimativas frequentistas se alinham com precisão dentro da incerteza estatística esperada.
 
-\begin{table}[htp]
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{../figures/bayes/download_throughput_bps_bayesian_gammagamma_client13.png}
+	\caption{Inferência Bayesiana para o \textit{throughput} de \textit{download} (Cliente 13) sob o modelo Gama–Gama.}
+	\label{fig:download_throughput_bps_bayesian_gammagamma_client13}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\textwidth]{../figures/bayes/upload_throughput_bps_bayesian_gammagamma_client13.png}
+	\caption{Inferência Bayesiana para o \textit{throughput} de \textit{upload} (Cliente 13) utilizando o modelo Gama–Gama.}
+	\label{fig:upload_throughput_bps_bayesian_gammagamma_client13}
+\end{figure}
+
+\begin{table}[H]
 	\centering
 	\caption{Convergência dos parâmetros (Gamma–Gamma) — Cliente 13 (Download).}
 	\label{tab:bayes_gamma_download_client13}
@@ -1337,7 +1354,7 @@ como mostrado nas tabelas a seguir:
 	\end{tabular}
 \end{table}
 
-\begin{table}[htp]
+\begin{table}[H]
 	\centering
 	\caption{Convergência dos parâmetros (Gamma–Gamma) — Cliente 13 (Upload).}
 	\label{tab:bayes_gamma_upload_client13}
@@ -1349,29 +1366,13 @@ como mostrado nas tabelas a seguir:
 	\end{tabular}
 \end{table}
 
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{../figures/bayes/download_throughput_bps_bayesian_gammagamma_client13.png}
-	\caption{.}
-	\label{fig:download_throughput_bps_bayesian_gammagamma_client13}
-\end{figure}
-\begin{figure}[htp]
-	\centering
-	\includegraphics[width=\textwidth]{../figures/bayes/upload_throughput_bps_bayesian_gammagamma_client13.png}
-	\caption{.}
-	\label{fig:upload_throughput_bps_bayesian_gammagamma_client13}
-\end{figure}
-
-Por fim, a variável de \textit{perda de pacotes} também apresentou resultados consistentes,
-com uma distribuição posterior bem concentrada, como mostrado na
-Figura~\ref{fig:packet_loss_percent_bayesian_betabinomial_client13}.
-A média posterior (0.0536) praticamente coincide com o valor estimado via MLE, demonstrando
-excelente adequação do modelo.
+Por fim, a variável de \textit{perda de pacotes} também apresentou desempenho satisfatório, com uma distribuição posterior concentrada e próxima ao comportamento real dos dados, conforme ilustrado na Figura~\ref{fig:packet_loss_percent_bayesian_betabinomial_client13}.
+A média posterior ($E[p] = 0,0536$) coincide praticamente com a estimativa de máxima verossimilhança, conforme mostrado na Tabela~\ref{tab:bayes_beta_client13}, reforçando a adequação do modelo Beta–Binomial e a capacidade da abordagem bayesiana de capturar padrões consistentes de perda de pacotes mesmo em amostras assimétricas.
 
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/packet_loss_percent_bayesian_betabinomial_client13.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para a fração de perda de pacotes (Cliente 13) utilizando o modelo Beta–Binomial.}
 	\label{fig:packet_loss_percent_bayesian_betabinomial_client13}
 \end{figure}
 
@@ -1389,26 +1390,24 @@ excelente adequação do modelo.
 
 \subsection{Resultados para o Servidor 02}
 
-Os resultados do Servidor 02 reforçam a robustez do modelo proposto. As Figuras
-\ref{fig:rtt_download_sec_bayesian_normalnormal_server02} e
-\ref{fig:rtt_upload_sec_bayesian_normalnormal_server02} mostram o excelente ajuste
-das distribuições preditivas para os tempos de \textit{RTT}, com convergência precisa
-entre as médias empíricas e as esperadas pela posterior.
+Os resultados obtidos para o Servidor 02 reforçam a consistência e precisão do modelo bayesiano adotado.
+As Figuras~\ref{fig:rtt_download_sec_bayesian_normalnormal_server02} e~\ref{fig:rtt_upload_sec_bayesian_normalnormal_server02} mostram bons ajuste das distribuições preditivas aos dados empíricos de RTT (download e upload), com convergência entre as médias empíricas e as médias posteriores.
+Nas Tabelas~\ref{tab:bayes_rtt_download_server02} e~\ref{tab:bayes_rtt_upload_server02}, observa-se que as variâncias posteriores diminuíram significativamente em relação às priors, refletindo a incorporação efetiva de informação pelos dados.
 
-\begin{figure}[htp]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/rtt_download_sec_bayesian_normalnormal_server02.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para o RTT de \textit{download} (Servidor 2) sob o modelo Normal–Normal.}
 	\label{fig:rtt_download_sec_bayesian_normalnormal_server02}
 \end{figure}
-\begin{figure}[htp]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/rtt_upload_sec_bayesian_normalnormal_server02.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para o RTT de \textit{upload} (Servidor 2) sob o modelo Normal–Normal.}
 	\label{fig:rtt_upload_sec_bayesian_normalnormal_server02}
 \end{figure}
 
-\begin{table}[htp]
+\begin{table}[H]
 	\centering
 	\caption{Comparação entre prior e posterior — Servidor 2 (RTT Download).}
 	\label{tab:bayes_rtt_download_server02}
@@ -1421,7 +1420,7 @@ entre as médias empíricas e as esperadas pela posterior.
 	\end{tabular}
 \end{table}
 
-\begin{table}[htp]
+\begin{table}[H]
 	\centering
 	\caption{Comparação entre prior e posterior — Servidor 2 (RTT Upload).}
 	\label{tab:bayes_rtt_upload_server02}
@@ -1434,25 +1433,24 @@ entre as médias empíricas e as esperadas pela posterior.
 	\end{tabular}
 \end{table}
 
-Os modelos Gamma–Gamma para o throughput também apresentaram bom desempenho
-(Figuras~\ref{fig:download_throughput_bps_bayesian_gammagamma_server02} e
-\ref{fig:upload_throughput_bps_bayesian_gammagamma_server02}), com médias preditivas
-muito próximas às médias MLE, indicando estabilidade e coerência estatística.
+Da mesma forma, os modelos Gamma–Gamma para o throughput apresentaram bom desempenho, como ilustrado nas Figuras~\ref{fig:download_throughput_bps_bayesian_gammagamma_server02} e~\ref{fig:upload_throughput_bps_bayesian_gammagamma_server02}.
+As médias preditivas permaneceram muito próximas das médias MLE, indicando coerência entre as abordagens bayesiana e frequentista.
+As Tabelas~\ref{tab:bayes_gamma_download_server02} e~\ref{tab:bayes_gamma_upload_server02} mostram que as variâncias das taxas $\beta$ colapsaram para valores próximos de zero, evidenciando alta confiança nas estimativas obtidas.
 
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/download_throughput_bps_bayesian_gammagamma_server02.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para o \textit{throughput} de \textit{download} (Servidor 2) sob o modelo Gama–Gama.}
 	\label{fig:download_throughput_bps_bayesian_gammagamma_server02}
 \end{figure}
 \begin{figure}[htp]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/upload_throughput_bps_bayesian_gammagamma_server02.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para o \textit{throughput} de \textit{upload} (Servidor 2) sob o modelo Gama–Gama.}
 	\label{fig:upload_throughput_bps_bayesian_gammagamma_server02}
 \end{figure}
 
-\begin{table}[htp]
+\begin{table}[H]
 	\centering
 	\caption{Convergência dos parâmetros (Gamma–Gamma) — Servidor 2 (Download).}
 	\label{tab:bayes_gamma_download_server02}
@@ -1464,7 +1462,7 @@ muito próximas às médias MLE, indicando estabilidade e coerência estatístic
 	\end{tabular}
 \end{table}
 
-\begin{table}[htp]
+\begin{table}[H]
 	\centering
 	\caption{Convergência dos parâmetros (Gamma–Gamma) — Servidor 2 (Upload).}
 	\label{tab:bayes_gamma_upload_server02}
@@ -1476,17 +1474,14 @@ muito próximas às médias MLE, indicando estabilidade e coerência estatístic
 	\end{tabular}
 \end{table}
 
-Por outro lado, a variável de \textit{perda de pacotes} apresentou o menor desempenho relativo
-(Figura~\ref{fig:packet_loss_percent_bayesian_betabinomial_server02}),
-com a distribuição posterior levemente deslocada para a direita da média empírica.
-Esse comportamento pode ser atribuído à alta concentração de valores próximos a zero
-e à assimetria da amostra, que dificultam a modelagem com a distribuição Beta-Binomial,
-limitando sua capacidade de capturar caudas longas e valores extremos.
+Por outro lado, a variável de \textit{perda de pacotes} apresentou o menor desempenho relativo (Figura~\ref{fig:packet_loss_percent_bayesian_betabinomial_server02}), com a distribuição posterior levemente deslocada para a direita da média empírica.
+Conforme mostrado na Tabela~\ref{tab:bayes_beta_server02}, embora a média posterior tenha se mantido próxima à estimativa MLE, a variância residual permaneceu elevada, indicando maior incerteza associada à previsão.
+Esse comportamento pode ser atribuído à forte concentração de valores próximos de zero e à assimetria acentuada da amostra, que dificultam a modelagem com a distribuição Beta-Binomial, limitando sua capacidade de representar adequadamente as caudas longas e valores extremos observados nos dados reais.
 
-\begin{figure}[htp]
+\begin{figure}[htp!]
 	\centering
 	\includegraphics[width=\textwidth]{../figures/bayes/packet_loss_percent_bayesian_betabinomial_server02.png}
-	\caption{.}
+	\caption{Inferência Bayesiana para a fração de perda de pacotes (Servidor 2) utilizando o modelo Beta–Binomial.}
 	\label{fig:packet_loss_percent_bayesian_betabinomial_server02}
 \end{figure}
 
@@ -1517,55 +1512,44 @@ pontuais quanto para quantificar a incerteza associada às previsões.
 A aplicação conjunta dos métodos de Máxima Verossimilhança (MLE) e Inferência Bayesiana
 permitiu avaliar, de forma comparativa, a eficiência das abordagens frequentista e probabilística
 na modelagem estatística das métricas de desempenho de rede.
-Os resultados obtidos demonstraram uma forte convergência entre ambas as metodologias,
-indicando que os dados observados forneceram informação suficiente para estimar os parâmetros
-com elevada confiança, mesmo sob a inclusão de priors fracamente informativas.
-
-\subsection{Comparação entre MLE e Inferência Bayesiana}
+Os resultados obtidos demonstraram uma convergência parcial entre ambas as metodologias. No entanto, dada a simplicidade dos modelos empregados e o volume substancial de dados observados, foi possível obter informação suficiente para estimar os parâmetros com confiança razoável, mesmo sob a inclusão de priors fracamente informativas.
 
 Em todos os casos analisados (RTT, Throughput e Perda de Pacotes), as estimativas Bayesianas
 para as médias e variâncias apresentaram valores muito próximos aos obtidos via MLE.
-No caso do \textbf{RTT}, a adoção de um modelo Normal–Normal resultou em posteriors
+No caso do RTT, a adoção de um modelo Normal–Normal resultou em posteriors
 com médias praticamente coincidentes às médias empíricas, refletindo a predominância dos
 dados observados sobre as priors.  
-Esse comportamento confirma que as priors definidas — de caráter \textit{fraco} e
-não informativo — exerceram impacto limitado na estimação final, atuando apenas como um
+Esse comportamento confirma que as priors definidas, de caráter \textit{fraco} e
+não informativo, exerceram impacto limitado na estimação final, atuando apenas como um
 mecanismo de regularização que evitou valores extremos ou não plausíveis.
 
-Por outro lado, em variáveis mais assimétricas, como o \textbf{Throughput},
+Por outro lado, em variáveis mais assimétricas, como o Throughput,
 modelado pelo esquema Gamma–Gamma, a atualização bayesiana contribuiu para uma suavização
 das flutuações amostrais e maior estabilidade das médias preditivas.
 As estimativas obtidas foram praticamente idênticas às derivadas do MLE,
-porém com variâncias ligeiramente menores, refletindo o efeito de contração (\textit{shrinkage})
-típico da abordagem bayesiana.
+porém com variâncias ligeiramente menores.
 
-Já no caso da \textbf{Perda de Pacotes}, modelada por uma distribuição Beta–Binomial,
+Já no caso da Perda de Pacotes, modelada por uma distribuição Beta–Binomial,
 o método Bayesiano apresentou pequena discrepância entre a média preditiva e o valor empírico,
 especialmente para o Servidor 2, cuja posterior apresentou deslocamento da média em relação
 à distribuição dos dados. Essa diferença está associada à forte assimetria e concentração
 de valores próximos de zero, condição que limita a capacidade da distribuição Beta de capturar
 caudas longas e variações abruptas, ainda que o ajuste global se mantenha aceitável.
 
-\subsection{Avaliação das Distribuições Preditivas}
-
 As distribuições preditivas obtidas a partir dos modelos Bayesianos mostraram
-excelente capacidade de generalização.
-Nos gráficos apresentados, observa-se que as curvas preditivas (distribuições Student-t ou
-Normais, conforme o modelo adotado) apresentam boa sobreposição com os histogramas
-dos dados de teste, confirmando a adequação das suposições estatísticas e a coerência
+boa capacidade de generalização.
+Nos gráficos apresentados, observa-se que as curvas preditivas apresentam boa sobreposição com os histogramas dos dados de teste, confirmando a adequação das suposições estatísticas e a coerência
 das incertezas inferidas.  
 Esse alinhamento evidencia que os modelos ajustados são capazes não apenas de reproduzir
 as estatísticas amostrais, mas também de prever o comportamento futuro das métricas de rede
 dentro de intervalos probabilisticamente consistentes.
 
 Em particular, para o RTT e o Throughput, as distribuições preditivas mantiveram
-valores esperados praticamente iguais às médias empíricas de teste,
+valores esperados próximos às médias empíricas de teste,
 demonstrando a estabilidade e robustez dos modelos.  
 Esses resultados sugerem que o framework estatístico empregado é capaz de
 capturar a estrutura subjacente das variáveis analisadas, mesmo diante da
 presença de ruído e variação entre clientes e servidores distintos.
-
-\subsection{Impacto das Priors}
 
 A análise comparativa evidencia que, sob priors fracamente informativas,
 a inferência Bayesiana aproxima-se da MLE em termos de estimativas pontuais.
@@ -1576,8 +1560,6 @@ permitindo extrair intervalos de credibilidade e previsões mais robustas.
 Essa propriedade é particularmente útil em contextos de monitoramento contínuo de rede,
 onde novos dados podem ser incorporados incrementalmente sem reprocessamento completo
 dos modelos.
-
-\subsection{Limitações e Considerações Finais}
 
 Apesar dos bons resultados, algumas limitações devem ser destacadas.
 Primeiramente, a suposição de independência entre as observações pode não refletir
@@ -1592,8 +1574,6 @@ nesses casos, a prior exerce maior influência sobre os resultados, podendo envi
 as estimativas se mal especificada.  
 Entretanto, no presente estudo, o volume de dados e o uso de priors fracas mitigaram esse risco,
 garantindo convergência consistente entre as abordagens.
-
-\subsection{Conclusão Geral}
 
 De forma geral, a inferência Bayesiana se mostrou uma extensão natural e robusta
 da abordagem de Máxima Verossimilhança, adicionando uma camada de interpretação probabilística
